@@ -1,22 +1,43 @@
-package com.testeXbrain.controller;
+package br.com.testeXbrain.controller;
 
-import com.testeXbrain.model.Vendedor;
-import com.testeXbrain.repository.VendedorRepository;
+import br.com.testeXbrain.model.Vendedor;
+
+import br.com.testeXbrain.service.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/vendedor")
 public class VendedorController {
 
     @Autowired
-    private VendedorRepository vendedorRepository;
+    private VendedorService vendedorService;
+
+    @GetMapping("/")
+    public List<Vendedor> getAllVendedores() {
+        return vendedorService.getAllVendedores();
+    }
+
+    @GetMapping("/{id}")
+    public Vendedor getVendedorById(@PathVariable Long id) {
+        return vendedorService.getVendedorById(id);
+    }
 
     @PostMapping("/")
-    public Vendedor vendedor(@RequestBody Vendedor vendedor) {
-        return this.vendedorRepository.save(vendedor);
+    public Vendedor createVendedor(@RequestBody Vendedor vendedor) {
+        return vendedorService.createVendedor(vendedor);
     }
+
+    @PutMapping("/{id}")
+    public Vendedor updateVendedor(@PathVariable Long id, @RequestBody Vendedor vendedor) {
+        return vendedorService.updateVendedor(id, vendedor);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteVendedor(@PathVariable Long id) {
+        vendedorService.deleteVendedor(id);
+    }
+
 }

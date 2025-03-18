@@ -1,4 +1,4 @@
-package com.testeXbrain.model;
+package br.com.testeXbrain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "vendedor")
 public class Vendedor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String nome;
+    private String name;
 }

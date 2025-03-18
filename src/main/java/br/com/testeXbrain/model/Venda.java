@@ -1,15 +1,11 @@
-package com.testeXbrain.model;
+package br.com.testeXbrain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -20,9 +16,11 @@ public class Venda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    private Date dataVenda;
+    private Long id;
+    private LocalDateTime dataVenda;
     private float valor;
-    private Vendedor idVendedor;
-    private Vendedor nomeVendedor;
+
+    @ManyToOne
+    @JoinColumn(name = "vendedor_id", nullable = false)
+    private Vendedor vendedor;
 }
