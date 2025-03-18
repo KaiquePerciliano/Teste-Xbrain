@@ -30,12 +30,12 @@ public class VendaController {
     }
 
     @PutMapping("/{id}")
-    public Venda updateVenda (@PathVariable Long id, @RequestBody Venda venda) {
+    public Venda updateVenda(@PathVariable Long id, @RequestBody Venda venda) {
         return vendaService.updateVenda(id, venda);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteVenda (@PathVariable Long id) {
+    public void deleteVenda(@PathVariable Long id) {
         vendaService.deleteVenda(id);
     }
 

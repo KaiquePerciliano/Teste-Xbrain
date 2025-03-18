@@ -29,7 +29,7 @@ public class VendedorService {
 
     public Vendedor updateVendedor(Long id, Vendedor vendedorDetails) {
         Optional<Vendedor> optionalVendedor = vendedorRepository.findById(id);
-        if(optionalVendedor.isPresent()) {
+        if (optionalVendedor.isPresent()) {
             Vendedor vendedor = optionalVendedor.get();
             vendedor.setName(vendedorDetails.getName());
             return vendedorRepository.save(vendedor);

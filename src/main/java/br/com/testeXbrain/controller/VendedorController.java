@@ -1,7 +1,6 @@
 package br.com.testeXbrain.controller;
 
 import br.com.testeXbrain.model.Vendedor;
-
 import br.com.testeXbrain.service.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
