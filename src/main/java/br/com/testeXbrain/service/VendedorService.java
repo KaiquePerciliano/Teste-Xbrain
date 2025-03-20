@@ -1,21 +1,63 @@
 package br.com.testeXbrain.service;
 
+import br.com.testeXbrain.model.Venda;
 import br.com.testeXbrain.model.Vendedor;
+import br.com.testeXbrain.repository.VendaRepository;
 import br.com.testeXbrain.repository.VendedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class VendedorService {
 
     @Autowired
+    private VendaRepository vendaRepository;
+
+    @Autowired
     private VendedorRepository vendedorRepository;
 
-    public List<Vendedor> getAllVendedores() {
-        return vendedorRepository.findAll();
+    public List<Map<String, Object>> getAllVendedores() {
+        List<Vendedor> vendedores = vendedorRepository.findAll();
+        List<Map<String, Object>> resultado = new ArrayList<>();
+
+        for (Vendedor vendedor : vendedores) {
+            List<Venda> vendas = vendaRepository.findVendaByVendedorId(vendedor.getId());
+
+            Map<String, Object> mapVendedor = new HashMap<>();
+            mapVendedor.put("id", vendedor.getId());
+            mapVendedor.put("nome", vendedor.getName());
+            mapVendedor.put("totalVendas", vendas.size());
+            mapVendedor.put("vendas", vendas);
+
+            resultado.add(mapVendedor);
+        }
+        return resultado;
+    }
+
+    public List<Map<String, Object>> getVendasByDateAndVendedor(Date dataInicio, Date dataFim) {
+        List<Vendedor> vendedores = vendedorRepository.findAll();
+        List<Map<String, Object>> resultado = new ArrayList<>();
+
+        for (Vendedor vendedor : vendedores) {
+            List<Venda> vendas = vendaRepository.findVendaByVendedorIdAndDataVendaBetween(vendedor.getId(), dataInicio, dataFim);
+
+            long diasInformados = TimeUnit.DAYS.convert(dataFim.getTime() - dataInicio.getTime(), TimeUnit.MILLISECONDS) + 1;
+            int totalVendas = vendas.size();
+            double mediaVendas = (double) totalVendas / diasInformados;
+
+            Map<String, Object> mapVendedor = new HashMap<>();
+            mapVendedor.put("id", vendedor.getId());
+            mapVendedor.put("nome", vendedor.getName());
+            mapVendedor.put("totalVendas", totalVendas);
+            mapVendedor.put("vendas", vendas);
+            mapVendedor.put("mediaVendas", mediaVendas);
+
+            resultado.add(mapVendedor);
+        }
+        return resultado;
     }
 
     public Vendedor getVendedorById(Long id) {
