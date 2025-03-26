@@ -19,7 +19,7 @@ public class VendedorService {
     @Autowired
     private VendedorRepository vendedorRepository;
 
-    public List<Map<String, Object>> getAllVendedores() {
+    public List<Map<String, Object>> listAllVendedores() {
         List<Vendedor> vendedores = vendedorRepository.findAll();
         List<Map<String, Object>> resultado = new ArrayList<>();
 

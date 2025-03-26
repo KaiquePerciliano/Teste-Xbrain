@@ -26,30 +26,29 @@ public class VendaControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private VendaService service;
+    private VendaService vendaService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void getAllVendasTest() throws Exception {
-        when(service.listAllVendas()).thenReturn(List.of(new Venda(), new Venda()));
+        when(vendaService.listAllVendas()).thenReturn(List.of(new Venda(), new Venda()));
 
         this.mockMvc.perform(get("/vendas/")).andExpect(status().isOk());
-        verify(service).listAllVendas();
+        verify(vendaService, times(1)).listAllVendas();
     }
 
     @Test
     void getVendaByIdTest() throws Exception {
-        Long id = 1L;
         Venda venda = new Venda();
-        venda.setId(id);
+        venda.setId(1L);
 
-        when(service.listVendaById(id)).thenReturn(venda);
+        when(vendaService.listVendaById(venda.getId())).thenReturn(venda);
 
         this.mockMvc.perform(get("/vendas/1")).andExpect(status().isOk());
 
-        verify(service).listVendaById(id);
+        verify(vendaService, times(1)).listVendaById(venda.getId());
     }
 
     @Test
@@ -58,31 +57,29 @@ public class VendaControllerTest {
         venda.setId(1L);
         venda.setValor(150.50f);
 
-        when(service.createVenda(any(Venda.class))).thenReturn(venda);
+        when(vendaService.createVenda(venda)).thenReturn(venda);
 
         mockMvc.perform(post("/vendas/").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(venda))).andExpect(status().isOk());
 
-        verify(service, times(1)).createVenda(any(Venda.class));
+        verify(vendaService, times(1)).createVenda(any(Venda.class));
     }
 
     @Test
     void updateVendaTest() throws Exception {
-        Long id = 1L;
         Venda vendaExistente = new Venda();
-        vendaExistente.setId(id);
+        vendaExistente.setId(1L);
         vendaExistente.setValor(100.50f);
 
-        Venda vendaAtualizada = new Venda();
-        vendaAtualizada.setId(id);
-        vendaAtualizada.setValor(150.75f);
+        when(vendaService.updateVenda(eq(vendaExistente.getId()), any(Venda.class)))
+                .thenReturn(vendaExistente);
 
-        when(service.updateVenda(eq(id), any(Venda.class))).thenReturn(vendaAtualizada);
+        mockMvc.perform(put("/vendas/{id}", vendaExistente.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(vendaExistente))).andExpect(status().isOk());
 
-        mockMvc.perform(put("/vendas/{id}", id).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(vendaAtualizada))).andExpect(status().isOk());
-
-        verify(service, times(1)).updateVenda(eq(id), any(Venda.class));
+        verify(vendaService, times(1))
+                .updateVenda(eq(vendaExistente.getId()), any(Venda.class));
     }
 
     @Test
@@ -90,14 +87,13 @@ public class VendaControllerTest {
         Long id = 1L;
 
         mockMvc.perform(delete("/vendas/{id}", id)).andExpect(status().isOk());
-        verify(service, times(1)).deleteVenda(id);
+        verify(vendaService, times(1)).deleteVenda(id);
     }
 
     @Test
     void getVendasByVendedorIdTest() throws Exception {
 
         Long vendedorId = 1L;
-
 
         Venda venda1 = new Venda();
         venda1.setId(1L);
@@ -109,7 +105,7 @@ public class VendaControllerTest {
 
         List<Venda> vendas = Arrays.asList(venda1, venda2);
 
-        when(service.listVendasPeloVendedorId(vendedorId)).thenReturn(vendas);
+        when(vendaService.listVendasPeloVendedorId(vendedorId)).thenReturn(vendas);
 
         mockMvc.perform(get("/vendas/vendedor/{vendedorId}", vendedorId))
                 .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -119,7 +115,6 @@ public class VendaControllerTest {
                 .andExpect(jsonPath("$[1].id").value(2L))
                 .andExpect(jsonPath("$[1].valor").value(200.75f));
 
-        verify(service, times(1)).listVendasPeloVendedorId(vendedorId);
+        verify(vendaService, times(1)).listVendasPeloVendedorId(vendedorId);
     }
-
 }

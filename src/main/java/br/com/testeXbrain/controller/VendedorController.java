@@ -19,7 +19,7 @@ public class VendedorController {
 
     @GetMapping("/")
     public List<Map<String, Object>> getAllVendedores() {
-        return vendedorService.getAllVendedores();
+        return vendedorService.listAllVendedores();
     }
 
     @GetMapping("/{id}")
