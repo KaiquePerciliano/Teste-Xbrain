@@ -28,7 +28,9 @@ public class VendedorController {
     }
 
     @GetMapping("/periodo-vendas")
-    public List<Map<String, Object>> getVendedorVendasPeriodo(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
+    public List<Map<String, Object>> getVendedorVendasPeriodo(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Date dataInicio, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim) {
         return vendedorService.getVendasByDateAndVendedor(dataInicio, dataFim);
     }
 

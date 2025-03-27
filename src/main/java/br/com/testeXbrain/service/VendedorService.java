@@ -42,9 +42,11 @@ public class VendedorService {
         List<Map<String, Object>> resultado = new ArrayList<>();
 
         for (Vendedor vendedor : vendedores) {
-            List<Venda> vendas = vendaRepository.findVendaByVendedorIdAndDataVendaBetween(vendedor.getId(), dataInicio, dataFim);
+            List<Venda> vendas = vendaRepository.findVendaByVendedorIdAndDataVendaBetween(vendedor.getId(),
+                    dataInicio, dataFim);
 
-            long diasInformados = TimeUnit.DAYS.convert(dataFim.getTime() - dataInicio.getTime(), TimeUnit.MILLISECONDS) + 1;
+            long diasInformados = TimeUnit.DAYS.convert(dataFim.getTime() - dataInicio.getTime(),
+                    TimeUnit.MILLISECONDS) + 1;
             int totalVendas = vendas.size();
             double mediaVendas = (double) totalVendas / diasInformados;
 
